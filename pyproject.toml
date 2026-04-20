@@ -1,0 +1,13 @@
+[tool.pyrefly]
+project_includes = ["src/**/*.py", "tests/**/*.py"]
+project_excludes = [
+    ".venv/**",
+    "venv/**",
+    ".browser_profile/**",
+    "**/__pycache__/**",
+    "database/**",
+    "logs/**",
+]
+search_path = ["."]
+python_version = "3.13"
+
