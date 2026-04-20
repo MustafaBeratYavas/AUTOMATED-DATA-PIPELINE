@@ -1,0 +1,65 @@
+app:
+  name: "Automated Data Pipeline"
+  version: "0.0.0"
+  env: "production"
+
+urls:
+  base: "https://www.akakce.com"
+  search: "https://www.google.com"
+
+paths:
+  database: "database/scraper.db"
+  logs_dir: "logs"
+
+browser:
+  headless: false
+  window_size: "1920,1080"
+  page_load_timeout: 45
+  implicit_wait: 5
+  captcha_auto_click: true
+  reconnect_time: 6
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+  user_data_dir: ".browser_profile"
+  profile_name: "Profile 1"
+
+scraping:
+  retries: 3
+  search_engine_fallback: true
+  google_query_format: 'site:akakce.com {brand} "{code}"'
+  html_source_count_threshold: 3
+
+delays:
+  init: [0.5, 1.0]
+  typing: [0.05, 0.15]
+  pre_enter: [0.2, 0.4]
+  post_search: [1.5, 2.0]
+  page_switch: [4.0, 5.0]
+  google_switch: [4.0, 5.5]
+  scroll: [0.5, 1.2]
+
+selectors:
+  search_input: "textarea[name='q'], input[name='q']"
+  search_result_item: "ul#APL li, ul.pl_v9 li"
+  search_result_title: "h3.pn_v8, b, span.pn_v8"
+  search_result_price: "span.pt_v8, span.pt_v9"
+  search_no_result: "div.search_v8"
+
+  product:
+    title: "h1"
+    category_crumb: "nav#BC_v8 ol li a"
+    price: "span.pt_v8, span.pt_v9"
+    sellers_list: "ul#PL, ul.pl_v9"
+    sellers_list_item: "li"
+    sellers_alt_item: "li.w_v8"
+    seller_price: "span.pt_v8, span.pt_v9"
+    seller_name_wrapper: "span.v_v8, div.v_v8, b.v_v8"
+
+  card:
+    sellers_container: "div.p_w_v9"
+    seller_link: "a"
+    seller_price: "span.pt_v8"
+    seller_name_img: "span.l img"
+    seller_name_text: "span.l b"
+
+  google:
+    result_link: "div.g a, div.yuRUbf a, a[href*='akakce.com']"

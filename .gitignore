@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+
+# Virtual Environment
+venv/
+.venv/
+env/
+.env
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+
+# Test & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+
+# App Data & Runtime
+.browser_profile/
+logs/*
+downloaded_files/
+
+!logs/.gitkeep
+!database/.gitkeep
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Temp
+*.log
+*.tmp
+_test_output.txt
+test_results.txt
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+!scraper.db
+!database/scraper.db
