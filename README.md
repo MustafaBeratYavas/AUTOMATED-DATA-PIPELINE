@@ -31,6 +31,7 @@ Constructed on a domain-driven architectural foundation, the extraction framewor
 - [Quickstart](#quickstart)
 - [Configuration](#configuration)
 - [Limitations & Disclaimers](#limitations--disclaimers)
+- [License](#license)
 
 <details>
 <summary><b>Click to expand project structure details</b></summary>
