@@ -228,14 +228,6 @@ pip install -r requirements.txt
 
 ## Quickstart
 
-### Prerequisites
-
-* **Runtime:** Python 3.13+ installed natively.
-* **Browser:** Google Chrome (required for headless `SeleniumBase` robotic navigation).
-* **OS:** Windows is recommended for automated `.bat` orchestration, but completely cross-platform compatible.
-
----
-
 ### 1. Web Extraction
 
 Initiate the headless automated browser sequence. This module parses the targeting parameters from `product_codes.txt` and populates the localized SQLite data warehouse (`database/scraper.db`) with normalized pricing indices.
