@@ -1,7 +1,7 @@
 <div align="center">
   <h1>E-COMMERCE DATA WAREHOUSE & ANALYTICS ENGINE</h1>
   <p>
-    <strong>Market Intelligence:</strong> Autonomous ETL Framework for Price Normalization, Outlier Detection, and Strategic Analytics
+    <strong>Team Members:</strong> Mustafa Berat Yavaş 21058023, Muhammed Kerem Demirbent 21058007 | TEAM 5 - MTM4692
   </p>
 
   <p>
