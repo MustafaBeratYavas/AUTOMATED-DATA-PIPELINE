@@ -5,13 +5,21 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "automated-data-pipeline"
 version = "0.0.0"
-description = "Automated marketplace scraping data pipeline."
+description = "Marketplace scraping, SQLite warehousing, and Flask dashboard pipeline for competitive pricing analysis."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { file = "LICENSE" }
 authors = [
     { name = "Mustafa Berat Yavaş" },
     { name = "Muhammed Kerem Demirbent" },
+]
+keywords = [
+    "browser-automation",
+    "data-pipeline",
+    "flask-dashboard",
+    "marketplace-analytics",
+    "seleniumbase",
+    "sqlite",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -29,6 +37,11 @@ dependencies = [
     "PyYAML==6.0.3",
     "Flask==3.1.2",
 ]
+
+[project.urls]
+Repository = "https://github.com/MustafaBeratYavas/AUTOMATED-DATA-PIPELINE"
+Documentation = "https://github.com/MustafaBeratYavas/AUTOMATED-DATA-PIPELINE#readme"
+Issues = "https://github.com/MustafaBeratYavas/AUTOMATED-DATA-PIPELINE/issues"
 
 [project.optional-dependencies]
 dev = [
