@@ -11,9 +11,15 @@ paths:
   database: "database/scraper.db"
   logs_dir: "logs"
 
+observability:
+  selector_usage:
+    enabled: true
+    output_dir: "logs"
+    report_prefix: "selector_usage"
+
 browser:
   headless: false
-  window_size: "1920,1080"
+  start_maximized: true
   page_load_timeout: 45
   implicit_wait: 5
   captcha_auto_click: true
@@ -27,6 +33,11 @@ scraping:
   search_engine_fallback: true
   google_query_format: 'site:akakce.com {brand} "{code}"'
   html_source_count_threshold: 3
+  search_input_validation_attempts: 2
+  detail_delay_probability: 0.7
+  no_result_terms:
+    - "bulunamad"
+    - "ilginizi"
 
 delays:
   init: [0.5, 1.0]
@@ -36,12 +47,13 @@ delays:
   page_switch: [4.0, 5.0]
   google_switch: [4.0, 5.5]
   scroll: [0.5, 1.2]
+  base_navigation: [1.0, 1.5]
+  post_detail: [0.5, 1.5]
 
 selectors:
   search_input: "textarea[name='q'], input[name='q']"
   search_result_item: "ul#APL li, ul.pl_v9 li"
   search_result_title: "h3.pn_v8, b, span.pn_v8"
-  search_result_price: "span.pt_v8, span.pt_v9"
   search_no_result: "div.search_v8"
 
   product:
@@ -53,13 +65,6 @@ selectors:
     sellers_alt_item: "li.w_v8"
     seller_price: "span.pt_v8, span.pt_v9"
     seller_name_wrapper: "span.v_v8, div.v_v8, b.v_v8"
-
-  card:
-    sellers_container: "div.p_w_v9"
-    seller_link: "a"
-    seller_price: "span.pt_v8"
-    seller_name_img: "span.l img"
-    seller_name_text: "span.l b"
 
   google:
     result_link: "div.g a, div.yuRUbf a, a[href*='akakce.com']"
