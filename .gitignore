@@ -25,9 +25,17 @@ env/
 
 # Test & Coverage
 .pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pyrefly/
+.pyrefly_cache/
 .coverage
 htmlcov/
 *.cover
+coverage.xml
+
+# Packaging
+pip-wheel-metadata/
 
 # App Data & Runtime
 .browser_profile/
@@ -53,4 +61,4 @@ test_results.txt
 *.sqlite
 *.sqlite3
 !scraper.db
-!database/scraper.db
+!database/scraper.db
