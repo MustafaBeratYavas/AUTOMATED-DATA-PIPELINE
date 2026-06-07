@@ -1,6 +1,4 @@
-# -- Project Root Path Resolution --
-# Anchors the absolute project root by traversing two levels up from this file.
-# All downstream modules reference ROOT_DIR for deterministic path construction.
+"""Shared filesystem locations used by the runtime package."""
 
 import os
 

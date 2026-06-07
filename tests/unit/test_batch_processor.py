@@ -1,6 +1,4 @@
-# -- Batch Processor Unit Tests --
-# Validates the queue management and sequential processing logic
-# of the BatchProcessor loop, including retry mechanisms and error handling.
+"""Unit tests for queue processing, retry handling, and persistence delegation."""
 
 import unittest
 from unittest.mock import MagicMock, patch
@@ -9,12 +7,13 @@ from src.models.product import ProductDTO
 from src.core.exceptions import DatabaseError
 
 class TestBatchProcessor(unittest.TestCase):
+    """Validate BatchProcessor behavior against mocked collaborators."""
 
     def setUp(self):
+        """Create a processor with isolated database and scraper mocks."""
         self.mock_db = MagicMock()
         self.mock_scraper = MagicMock()
 
-        # Isolate the processor from actual DB and Scraping implementations
         with patch("src.engine.batch_processor.Logger"):
             self.processor = BatchProcessor(self.mock_db, self.mock_scraper)
             self.processor.logger = MagicMock()
@@ -24,13 +23,13 @@ class TestBatchProcessor(unittest.TestCase):
             {"id": 1, "product_code": "T001", "error_count": 0},
             None
         ]
-        
+
         result_dto = ProductDTO(code="T001", brand="Razer", title="Test Product")
         self.mock_scraper.process_product.return_value = result_dto
 
         self.processor.run()
 
-        # Verify standard success flow: process -> insert -> update status
+
         self.mock_scraper.process_product.assert_called_once()
         self.mock_db.insert_products.assert_called_once()
         self.mock_db.update_target_status.assert_called_once_with(1, "COMPLETED", 0)
@@ -57,7 +56,7 @@ class TestBatchProcessor(unittest.TestCase):
 
         self.processor.run(max_retries=3)
 
-        # Verify error count increments and status returns to PENDING for retry
+
         self.mock_db.update_target_status.assert_called_once_with(1, "PENDING", 1)
 
     def test_run_scraper_exception_max_retries_fail(self):
@@ -69,7 +68,7 @@ class TestBatchProcessor(unittest.TestCase):
 
         self.processor.run(max_retries=3)
 
-        # Verify job is marked as FAILED once max retries limit is exceeded
+
         self.mock_db.update_target_status.assert_called_once_with(1, "FAILED", 3)
 
     def test_run_database_error_continues(self):

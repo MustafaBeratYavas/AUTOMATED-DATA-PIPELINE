@@ -1,7 +1,4 @@
-# -- Custom Browser Engine --
-# Wraps SeleniumBase to provide an undetectable, anti-bot hardened 
-# Chrome WebDriver. Implements a context manager lifecycle and reads
-# user preferences natively from settings.yaml.
+"""Browser lifecycle management for SeleniumBase UC scraping sessions."""
 
 from __future__ import annotations
 
@@ -14,28 +11,31 @@ from src.core.logger import Logger
 from src.definitions import ROOT_DIR
 
 class BrowserEngine:
+    """Create and dispose an anti-bot-hardened Chrome WebDriver."""
 
     def __init__(self) -> None:
+        """Initialize configuration and deferred driver state."""
         self.config = Config()
         self.logger = Logger.get_logger(__name__)
         self.driver: Any = None
 
     def __enter__(self) -> Any:
-        # Ensures the driver is started dynamically when the context block is entered
+        """Start the browser and return the live driver for a context block."""
         self.start()
         assert self.driver is not None, "BrowserEngine.start() failed to initialise the driver"
         return self.driver
 
     def __exit__(self, exc_type: type[BaseException] | None, exc_val: BaseException | None, exc_tb: object) -> None:
+        """Always close the browser when leaving the context block."""
         self.stop()
 
     def start(self) -> None:
-        # Factory method launching UC (Undetected-Chromedriver) mode using config tokens
+        """Launch Chrome with project-level stealth and profile settings."""
         if self.driver:
             return
 
         headless = self.config.get("browser", "headless", default=False)
-        window_size = self.config.get("browser", "window_size", default="1920,1080")
+        start_maximized = self.config.get("browser", "start_maximized", default=True)
         page_load_timeout = self.config.get("browser", "page_load_timeout", default=30)
         user_agent = self.config.get("browser", "user_agent")
 
@@ -47,12 +47,13 @@ class BrowserEngine:
             self.logger.info(f"Profile path: {user_data_abs}")
 
             chromium_args = [
-                f"--window-size={window_size}",
                 "--disable-blink-features=AutomationControlled",
                 "--no-sandbox",
                 "--disable-dev-shm-usage",
                 "--disable-popup-blocking",
             ]
+            if not headless and start_maximized:
+                chromium_args.insert(0, "--start-maximized")
 
             self.driver = Driver(
                 uc=True,
@@ -64,7 +65,8 @@ class BrowserEngine:
             base_url = self.config.get("urls", "base", default="https://www.akakce.com")
             reconnect_time = self.config.get("browser", "reconnect_time", default=6)
             try:
-                self.driver.uc_open_with_reconnect(base_url, reconnect_time=reconnect_time)  # type: ignore[attr-defined]
+                # UC reconnect reduces transient anti-bot failures during first navigation.
+                getattr(self.driver, "uc_open_with_reconnect")(base_url, reconnect_time=reconnect_time)
                 self.logger.info("Initial page loaded with reconnect strategy.")
             except Exception as e:
                 self.logger.warning(f"Reconnect navigation failed, using direct get: {e}")
@@ -73,7 +75,8 @@ class BrowserEngine:
             captcha_enabled = self.config.get("browser", "captcha_auto_click", default=True)
             if captcha_enabled:
                 try:
-                    self.driver.uc_gui_click_captcha()  # type: ignore[attr-defined]
+                    # CAPTCHA auto-click is best-effort; normal scraping should continue if absent.
+                    getattr(self.driver, "uc_gui_click_captcha")()
                     self.logger.info("CAPTCHA auto-click attempted.")
                 except Exception as e:
                     self.logger.debug(f"CAPTCHA click skipped (none detected or failed): {e}")
@@ -85,9 +88,6 @@ class BrowserEngine:
 
             self.driver.set_page_load_timeout(page_load_timeout)
 
-            if not headless:
-                self.driver.maximize_window()
-
             self.logger.info("Browser engine started successfully.")
 
         except Exception as e:
@@ -96,6 +96,7 @@ class BrowserEngine:
             raise
 
     def stop(self) -> None:
+        """Terminate the driver process if it has been started."""
         if self.driver:
             try:
                 self.driver.quit()
