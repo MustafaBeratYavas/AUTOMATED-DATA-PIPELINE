@@ -1,3 +1,100 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "automated-data-pipeline"
+version = "0.0.0"
+description = "Automated marketplace scraping data pipeline."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Mustafa Berat Yavaş" },
+    { name = "Muhammed Kerem Demirbent" },
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Database",
+    "Topic :: Internet :: WWW/HTTP :: Browsers",
+]
+dependencies = [
+    "seleniumbase==4.46.5",
+    "selenium==4.40.0",
+    "PyYAML==6.0.3",
+    "Flask==3.1.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.8.0",
+    "pyrefly",
+]
+
+[project.scripts]
+adp = "src.main:main"
+adp-scrape = "src.main:main"
+adp-create-profile = "src.tasks.create_profile:main"
+adp-seed-targets = "src.tasks.seed_targets:main"
+adp-dashboard = "src.web.app:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests/unit"]
+python_files = ["test_*.py"]
+addopts = [
+    "-ra",
+    "--strict-config",
+    "--strict-markers",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["src"]
+omit = [
+    "tests/*",
+]
+
+[tool.coverage.report]
+fail_under = 40
+show_missing = true
+skip_covered = true
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+    "raise NotImplementedError",
+]
+
+[tool.coverage.html]
+directory = "htmlcov"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+src = ["src", "tests"]
+exclude = [
+    ".browser_profile",
+    ".venv",
+    "build",
+    "database",
+    "dist",
+    "logs",
+]
+
+[tool.ruff.lint]
+select = ["E9", "F63", "F7", "F82"]
+
 [tool.pyrefly]
 project_includes = ["src/**/*.py", "tests/**/*.py"]
 project_excludes = [
@@ -9,5 +106,4 @@ project_excludes = [
     "logs/**",
 ]
 search_path = ["."]
-python_version = "3.13"
-
+python_version = "3.11"
