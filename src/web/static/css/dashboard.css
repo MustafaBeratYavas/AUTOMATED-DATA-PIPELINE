@@ -589,6 +589,29 @@ h2 {
     background: var(--accent-danger);
 }
 
+@media print {
+    body {
+        background: #ffffff;
+        color: #0f172a;
+    }
+
+    .toolbar,
+    .status-bar,
+    .chart-tabs {
+        display: none;
+    }
+
+    .dashboard-shell {
+        width: 100%;
+        padding: 0;
+    }
+
+    .panel,
+    .metric-card {
+        box-shadow: none;
+    }
+}
+
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -683,6 +706,11 @@ select:focus:not(:focus-visible) {
     .chart-tab {
         width: 100%;
         max-width: none;
+    }
+
+    .chart-tab span,
+    .chart-tab small {
+        white-space: normal;
     }
 
     .select-control,
