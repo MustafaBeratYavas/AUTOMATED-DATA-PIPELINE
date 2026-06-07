@@ -13,6 +13,8 @@ venv/
 .venv/
 env/
 .env
+.env.*
+!.env.example
 
 # IDE / Editor
 .vscode/
@@ -41,6 +43,7 @@ pip-wheel-metadata/
 .browser_profile/
 logs/*
 downloaded_files/
+*.pid
 
 !logs/.gitkeep
 !database/.gitkeep
@@ -53,6 +56,8 @@ desktop.ini
 # Temp
 *.log
 *.tmp
+*.bak
+*.orig
 _test_output.txt
 test_results.txt
 
