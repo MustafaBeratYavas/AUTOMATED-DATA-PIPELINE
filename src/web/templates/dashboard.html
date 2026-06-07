@@ -20,10 +20,10 @@
             <select id="categoryFilter" class="select-control">
                 <option value="">All categories</option>
             </select>
-            <button id="refreshButton" class="primary-button" type="button">
+            <button id="refreshButton" class="primary-button" type="button" aria-label="Refresh dashboard data">
                 <span>Refresh</span>
             </button>
-            <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">
+            <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle color theme">
                 <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
                 </svg>
@@ -88,22 +88,22 @@
 
     <section class="chart-workspace">
         <nav class="chart-tabs" aria-label="Dashboard views" role="tablist">
-            <button class="chart-tab is-active" type="button" data-target="marketplacePanel" role="tab" aria-selected="true">
+            <button id="marketplaceTab" class="chart-tab is-active" type="button" data-target="marketplacePanel" role="tab" aria-selected="true" aria-controls="marketplacePanel">
                 <span>Marketplace Positioning</span>
                 <small>Competitive pricing index</small>
             </button>
-            <button class="chart-tab" type="button" data-target="spreadPanel" role="tab" aria-selected="false">
+            <button id="spreadTab" class="chart-tab" type="button" data-target="spreadPanel" role="tab" aria-selected="false" aria-controls="spreadPanel">
                 <span>SKU Price Dispersion</span>
                 <small>Largest marketplace gaps</small>
             </button>
-            <button class="chart-tab" type="button" data-target="heatmapPanel" role="tab" aria-selected="false">
+            <button id="heatmapTab" class="chart-tab" type="button" data-target="heatmapPanel" role="tab" aria-selected="false" aria-controls="heatmapPanel">
                 <span>Category Coverage</span>
                 <small>Listing depth by marketplace</small>
             </button>
         </nav>
 
         <article class="panel chart-stage">
-            <section id="marketplacePanel" class="chart-panel is-active" role="tabpanel">
+            <section id="marketplacePanel" class="chart-panel is-active" role="tabpanel" aria-labelledby="marketplaceTab">
                 <div class="panel-header">
                     <div>
                         <h2>Marketplace Positioning</h2>
@@ -113,7 +113,7 @@
                 <div id="marketplaceChart" class="chart-box" aria-live="polite"></div>
             </section>
 
-            <section id="spreadPanel" class="chart-panel" role="tabpanel" hidden>
+            <section id="spreadPanel" class="chart-panel" role="tabpanel" aria-labelledby="spreadTab" hidden>
                 <div class="panel-header">
                     <div>
                         <h2>SKU Price Dispersion</h2>
@@ -123,7 +123,7 @@
                 <div id="spreadChart" class="chart-box" aria-live="polite"></div>
             </section>
 
-            <section id="heatmapPanel" class="chart-panel" role="tabpanel" hidden>
+            <section id="heatmapPanel" class="chart-panel" role="tabpanel" aria-labelledby="heatmapTab" hidden>
                 <div class="panel-header">
                     <div>
                         <h2>Category Coverage</h2>
