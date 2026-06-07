@@ -1,18 +1,17 @@
-# -- Product DTO Unit Tests --
-# Validates the strict data transfer object layer used to normalise
-# scraped data into database-ready row structures.
+"""Unit tests for ProductDTO database row normalization."""
 
 import unittest
 from datetime import date
 from src.models.product import ProductDTO
 
 class TestProductDTO(unittest.TestCase):
+    """Validate DTO defaults and seller-to-row expansion."""
 
     def test_no_sellers_single_row(self):
         dto = ProductDTO(code="P001", brand="Razer", price=500.0)
         rows = dto.to_db_rows()
 
-        # Verify a product with no secondary sellers produces exactly one parent row
+
         self.assertEqual(len(rows), 1)
         self.assertEqual(rows[0]["product_code"], "P001")
         self.assertEqual(rows[0]["brand"], "Razer")
@@ -29,7 +28,7 @@ class TestProductDTO(unittest.TestCase):
         )
         rows = dto.to_db_rows()
 
-        # Verify secondary sellers explode into separate rows sharing root metadata
+
         self.assertEqual(len(rows), 2)
         self.assertEqual(rows[0]["marketplace"], "Amazon")
         self.assertEqual(rows[0]["price"], 100.0)
@@ -43,12 +42,12 @@ class TestProductDTO(unittest.TestCase):
         self.assertEqual(dto.brand, "Razer")
         self.assertIsNone(dto.title)
         self.assertIsNone(dto.category)
-        self.assertEqual(dto.price, 0.0)
+        self.assertIsNone(dto.price)
         self.assertEqual(dto.sellers, [])
 
     def test_no_sellers_no_price_returns_none_price(self):
         dto = ProductDTO(code="P004")
-        # Verify completely empty price defaults cleanly with no marketplace mapping
+
         rows = dto.to_db_rows()
 
         self.assertEqual(rows[0]["brand"], "Razer")
@@ -77,7 +76,7 @@ class TestProductDTO(unittest.TestCase):
             "brand", "product_code", "product_category", "product_name",
             "marketplace", "price", "product_url", "scraped_at",
         }
-        # Ensure schema strictly adheres to the database columns expectations
+
         self.assertEqual(set(rows[0].keys()), expected_keys)
         self.assertEqual(rows[0]["product_category"], "Monitör")
 

@@ -1,10 +1,9 @@
-# -- Randomised Delay Utility --
-# Introduces non-deterministic sleep intervals to emulate human browsing cadence.
-# Critical for anti-bot evasion across rate-limited marketplace endpoints.
+"""Timing helpers used to vary browser interaction cadence."""
 
-import time
 import random
+import time
+
 
 def random_sleep(min_seconds: float, max_seconds: float) -> None:
-    # Block execution for a uniformly distributed random duration between bounds
+    """Sleep for a random duration inside the provided bounds."""
     time.sleep(random.uniform(min_seconds, max_seconds))
