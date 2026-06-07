@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Marketplace Intelligence Center{% endblock %}
+
+{% block body %}
+<a href="#main-content" class="skip-link">Skip to content</a>
+
+<main id="main-content" class="dashboard-shell">
+    <header class="topbar">
+        <div class="topbar-left">
+            <p class="eyebrow">
+                <span class="eyebrow-dot" aria-hidden="true"></span>
+                AUTOMATED DATA PIPELINE
+            </p>
+            <h1>MARKETPLACE INTELLIGENCE CENTER</h1>
+            <p class="page-subtitle">Latest Akakce scrape insights across competitive pricing, marketplace pressure, and category coverage.</p>
+        </div>
+        <div class="toolbar" aria-label="Dashboard controls">
+            <label class="select-label" for="categoryFilter">Category</label>
+            <select id="categoryFilter" class="select-control">
+                <option value="">All categories</option>
+            </select>
+            <button id="refreshButton" class="primary-button" type="button">
+                <span>Refresh</span>
+            </button>
+            <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">
+                <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+                <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="5"/>
+                    <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                    <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <section class="summary-grid" aria-label="Summary metrics">
+        <article class="metric-card">
+            <div class="metric-top">
+                <div class="metric-icon" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                </div>
+                <span class="metric-label">Total Rows</span>
+            </div>
+            <strong id="metricTotalRows">-</strong>
+        </article>
+        <article class="metric-card">
+            <div class="metric-top">
+                <div class="metric-icon" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </div>
+                <span class="metric-label">Priced Listings</span>
+            </div>
+            <strong id="metricPricedRows">-</strong>
+        </article>
+        <article class="metric-card">
+            <div class="metric-top">
+                <div class="metric-icon" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                </div>
+                <span class="metric-label">Products</span>
+            </div>
+            <strong id="metricProducts">-</strong>
+        </article>
+        <article class="metric-card">
+            <div class="metric-top">
+                <div class="metric-icon" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                </div>
+                <span class="metric-label">Marketplaces</span>
+            </div>
+            <strong id="metricMarketplaces">-</strong>
+        </article>
+        <article class="metric-card">
+            <div class="metric-top">
+                <div class="metric-icon" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <span class="metric-label">Latest Snapshot</span>
+            </div>
+            <strong id="metricLastScraped">-</strong>
+        </article>
+    </section>
+
+    <section class="chart-workspace">
+        <nav class="chart-tabs" aria-label="Dashboard views" role="tablist">
+            <button class="chart-tab is-active" type="button" data-target="marketplacePanel" role="tab" aria-selected="true">
+                <span>Marketplace Positioning</span>
+                <small>Competitive pricing index</small>
+            </button>
+            <button class="chart-tab" type="button" data-target="spreadPanel" role="tab" aria-selected="false">
+                <span>SKU Price Dispersion</span>
+                <small>Largest marketplace gaps</small>
+            </button>
+            <button class="chart-tab" type="button" data-target="heatmapPanel" role="tab" aria-selected="false">
+                <span>Category Coverage</span>
+                <small>Listing depth by marketplace</small>
+            </button>
+        </nav>
+
+        <article class="panel chart-stage">
+            <section id="marketplacePanel" class="chart-panel is-active" role="tabpanel">
+                <div class="panel-header">
+                    <div>
+                        <h2>Marketplace Positioning</h2>
+                        <p>Ranks marketplaces by lowest-price wins, listing coverage, and normalized price index.</p>
+                    </div>
+                </div>
+                <div id="marketplaceChart" class="chart-box" aria-live="polite"></div>
+            </section>
+
+            <section id="spreadPanel" class="chart-panel" role="tabpanel" hidden>
+                <div class="panel-header">
+                    <div>
+                        <h2>SKU Price Dispersion</h2>
+                        <p>Highlights product codes with the widest marketplace price gaps.</p>
+                    </div>
+                </div>
+                <div id="spreadChart" class="chart-box" aria-live="polite"></div>
+            </section>
+
+            <section id="heatmapPanel" class="chart-panel" role="tabpanel" hidden>
+                <div class="panel-header">
+                    <div>
+                        <h2>Category Coverage</h2>
+                        <p>Shows marketplace listing density across product categories.</p>
+                    </div>
+                </div>
+                <div id="heatmapChart" class="chart-box" aria-live="polite"></div>
+            </section>
+        </article>
+    </section>
+
+    <div id="statusBar" class="status-bar" role="status">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span id="statusMessage">Ready</span>
+    </div>
+</main>
+{% endblock %}

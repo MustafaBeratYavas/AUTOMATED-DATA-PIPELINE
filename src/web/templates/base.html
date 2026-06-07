@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Automated Data Pipeline - Marketplace intelligence dashboard with competitive insights.">
+    <meta name="theme-color" content="#6366f1">
+    <title>{% block title %}Automated Data Pipeline Dashboard{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <script>
+        (function () {
+            var stored = localStorage.getItem("dashboard-theme");
+            var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+            var theme = stored || (prefersDark ? "dark" : "light");
+            document.documentElement.setAttribute("data-theme", theme);
+        }());
+    </script>
+</head>
+<body>
+    {% block body %}{% endblock %}
+
+    <script src="{{ url_for('static', filename='js/vendor/echarts.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dashboard-api.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dashboard-charts.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dashboard-app.js') }}"></script>
+</body>
+</html>
