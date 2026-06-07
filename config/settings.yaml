@@ -1,22 +1,27 @@
+# Application metadata surfaced in startup logs and documentation.
 app:
   name: "Automated Data Pipeline"
   version: "0.0.0"
   env: "production"
 
+# Target endpoints used by the scraper and fallback search resolver.
 urls:
   base: "https://www.akakce.com"
   search: "https://www.google.com"
 
+# Local runtime storage paths. Keep generated logs and browser state out of Git.
 paths:
   database: "database/scraper.db"
   logs_dir: "logs"
 
+# Selector telemetry is diagnostic only; it does not change extraction behavior.
 observability:
   selector_usage:
     enabled: true
     output_dir: "logs"
     report_prefix: "selector_usage"
 
+# SeleniumBase Chrome runtime configuration.
 browser:
   headless: false
   start_maximized: true
@@ -28,6 +33,7 @@ browser:
   user_data_dir: ".browser_profile"
   profile_name: "Profile 1"
 
+# Queue processing and product-resolution behavior.
 scraping:
   retries: 3
   search_engine_fallback: true
@@ -39,6 +45,7 @@ scraping:
     - "bulunamad"
     - "ilginizi"
 
+# Randomized wait ranges used to reduce brittle timing assumptions.
 delays:
   init: [0.5, 1.0]
   typing: [0.05, 0.15]
@@ -50,6 +57,7 @@ delays:
   base_navigation: [1.0, 1.5]
   post_detail: [0.5, 1.5]
 
+# DOM selector contracts. Update these first when the target layout changes.
 selectors:
   search_input: "textarea[name='q'], input[name='q']"
   search_result_item: "ul#APL li, ul.pl_v9 li"
