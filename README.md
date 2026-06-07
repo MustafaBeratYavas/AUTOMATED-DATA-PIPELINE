@@ -1,18 +1,18 @@
 <div align="center">
-  <h1>E-COMMERCE DATA WAREHOUSE & ANALYTICS ENGINE</h1>
+  <h1>AUTOMATED DATA PIPELINE</h1>
   <p>
     <strong>Team Members:</strong> Mustafa Berat Yavaş 21058023, Muhammed Kerem Demirbent 21058007 | TEAM 5 - MTM4692
   </p>
 
   <p>
     <a href="https://www.python.org/">
-      <img src="https://img.shields.io/badge/Python-3.13-3776AB?logo=python&amp;logoColor=white" alt="Python" />
-    </a>
-    <a href="https://pandas.pydata.org/">
-      <img src="https://img.shields.io/badge/Pandas-2.2%2B-150458?logo=pandas&amp;logoColor=white" alt="Pandas" />
+      <img src="https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&amp;logoColor=white" alt="Python" />
     </a>
     <a href="https://seleniumbase.io/">
       <img src="https://img.shields.io/badge/SeleniumBase-4.46%2B-00A98F?logo=selenium&amp;logoColor=white" alt="SeleniumBase" />
+    </a>
+    <a href="https://flask.palletsprojects.com/">
+      <img src="https://img.shields.io/badge/Flask-3.1%2B-000000?logo=flask&amp;logoColor=white" alt="Flask" />
     </a>
     <a href="./LICENSE">
       <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License" />
@@ -20,51 +20,45 @@
   </p>
 </div>
 
-This repository presents a scalable Data Engineering and Analytics pipeline designed to autonomously ingest, normalize, and analyze E-commerce price indices at scale. Serving as both a robust ETL (Extract, Transform, Load) orchestration layer and an advanced statistical modeling engine, the system continuously aggregates fragmented and unstructured marketplace data into a centralized, query-optimized structured SQLite data warehouse.
+This repository contains an end-to-end marketplace data pipeline for collecting, normalizing, storing, and visualizing competitive e-commerce pricing data from Akakce. The system uses SeleniumBase-powered browser automation to resolve product pages from a queue of target product codes, validates matched product detail pages before extraction, persists seller-level price snapshots into SQLite, and exposes the collected data through a local Flask dashboard powered by Apache ECharts.
 
-Constructed on a domain-driven architectural foundation, the extraction framework leverages stealth-oriented browser automation to systematically parse raw DOM artifacts across varying HTML structures. Following extraction and validation, the downstream analytics engine ingests these normalized datasets utilizing Pandas and NumPy matrices. It then applies rigorous quantitative methodologies—such as Interquartile Range (IQR) outlier trimming, Pearson correlation clustering, and temporal variance tracking. The pipeline ultimately executes an automated reporting workflow, delivering a deterministic portfolio of high-resolution quantitative visualizations that expose actionable insights into price elasticity, marketplace aggressiveness, and macroeconomic volatility.
-
-## Table of Contents
-- [Quantitative Data Analysis & Market Intelligence Report](#quantitative-data-analysis--market-intelligence-report)
-- [Executive Conclusion & Business Impact](#executive-conclusion--business-impact)
-- [Dependencies](#dependencies)
-- [Quickstart](#quickstart)
-- [Configuration](#configuration)
-- [Limitations & Disclaimers](#limitations--disclaimers)
-- [License](#license)
+The project is organized around clear runtime boundaries: configuration-driven selectors and delays, a queue-oriented batch processor with retry handling, dedicated services for search, detail parsing, seller extraction, and persistence, plus dashboard services that transform stored rows into marketplace competitiveness, SKU price dispersion, and category coverage views. Selector usage reports are produced during scraper execution so changes in the target marketplace layout can be diagnosed from runtime evidence instead of guesswork.
 
 <details>
 <summary><b>Click to expand project structure details</b></summary>
 
 ```text
 .
-├── .github
-│   └── workflows                           # CI/CD pipeline definitions ensuring continuous integration and testing
-├── config
-│   └── settings.yaml                       # Application-wide deterministic configurations (heuristics, locators, delays)
-├── database
-│   └── scraper.db                          # Local persistent SQLite data store containing the normalized extracted metrics
-├── downloaded_files                        # Temp cache acting as an I/O buffer for static asset retrievals
-├── logs                                    # Centralized logging sink segregating multi-level runtime execution traces
-├── reports
-│   └── charts                              # Artifact directory storing generated high-DPI matplotlib analytical visualizations
-├── src
-│   ├── analysis                            # Dedicated quantitative domain handling Pandas-driven statistical evaluations
-│   │   ├── analyzers                       # Decoupled SOLID workers (e.g. CorrelationAnalyzer, OutlierAnalyzer)
-│   │   ├── core                            # Analytics backbone housing base OOP abstractions and DB loading mechanisms
-│   │   └── utils                           # Pure functions for generic data preprocessing and numerical formatting
-│   ├── core                                # System foundational layer including custom exceptions and logger singletons
-│   ├── engine                              # Low-level browser automation engine strictly managing WebDriver/Selenium lifecycles
-│   ├── models                              # Data Transfer Objects (DTOs) and strongly-typed domain model representations
-│   ├── services                            # Primary business logic layer encapsulating Extraction, Search, and Database brokers
-│   └── tasks                               # Isolated executable scripts for auxiliary operations (e.g., seeding, profile init)
-├── tests                                   # TDD-compliant repository of unit and integration test assertions (Pytest)
-├── .gitignore                              # Git tracking exclusions to prevent bloat (e.g. __pycache__, scratch, *.db)
-├── pyproject.toml                          # Core PEP 518 manifest for build system and dependency specifications
-├── README.md                               # Project technical documentation and architectural breakdown
-├── requirements.txt                        # Pinned global dependencies ensuring reproducible environment builds
-├── product_codes.txt                       # Initial data-seeding hashmap used for targeted web extraction traverses
-└── start.bat                               # Windows execution wrapper handling automated virtual environment orchestration
+|-- .github
+|   `-- workflows
+|       `-- ci.yml                        # Lint, test, coverage, and type-check workflow
+|-- config
+|   `-- settings.yaml                     # Runtime configuration for scraping, browser, selectors, and paths
+|-- database
+|   |-- .gitkeep                          # Keeps the database directory available in fresh clones
+|   `-- scraper.db                        # SQLite database for target queue and scraped product rows
+|-- logs
+|   `-- .gitkeep                          # Keeps the log directory available in fresh clones
+|-- src
+|   |-- core                              # Configuration, logging, exceptions, and selector usage reporting
+|   |-- engine                            # Browser lifecycle and queue-driven batch orchestration
+|   |-- models                            # Product DTOs and database row conversion logic
+|   |-- services                          # Search, detail scraping, seller extraction, and SQLite access
+|   |-- tasks                             # CLI helpers for Chrome profile creation and target seeding
+|   |-- utils                             # String normalization, price parsing, and timing helpers
+|   |-- web                               # Flask dashboard backend, templates, static assets, and chart data services
+|   |-- definitions.py                    # Repository path definitions
+|   `-- main.py                           # Scraping pipeline entrypoint
+|-- tests
+|   |-- integration                       # Browser-facing smoke tests
+|   |-- unit                              # Fast unit tests for services, engine, tasks, models, and dashboard
+|   |-- conftest.py                       # Shared pytest fixtures and mocks
+|   `-- __init__.py
+|-- .gitignore                            # Git exclusions for caches, local profiles, logs, and generated files
+|-- LICENSE                               # MIT license terms
+|-- README.md                             # Project documentation
+|-- product_codes.txt                     # Seed list of target product codes
+`-- pyproject.toml                        # Project metadata, dependencies, CLI scripts, and tool configuration
 ```
 
 </details>
@@ -72,143 +66,79 @@ Constructed on a domain-driven architectural foundation, the extraction framewor
 <details>
 <summary><b>Click to expand technology stack details</b></summary>
 
-| Component | Technology | Purpose |
+| Layer | Technology | Role in the Project |
 |:---|:---|:---|
-| **Data Extraction** | SeleniumBase & Selenium | Stealth-oriented DOM automation and asynchronous data retrieval |
-| **Core Architecture** | Python 3.13 | High-level pipeline orchestration and strict OOP-based SOLID business logic |
-| **Data Processing** | Pandas & NumPy | High-speed tabular transformations, normalizations, and memory-mapped aggregation |
-| **Quantitative ML** | Scikit-Learn & SciPy | Unsupervised correlation clustering and Interquartile outlier regressions |
-| **Visualizations** | Matplotlib & Seaborn | Multi-thematic, deterministic 1080p programmatic graphics generation |
-| **Persistence (DWH)**| SQLite3 (Built-in)   | Relational local data warehouse (OLTP/OLAP proxy) for historical pricing structured data |
-| **Configuration**   | PyYAML               | Stateful extraction locators, environment parameters, and systemic delay heuristics |
-| **Quality Assurance**| Pytest & GitHub Actions | Automated CI/CD pipeline, structural regression testing, and codebase linting (Flake8) |
+| **Application Runtime** | Python 3.11+ | Main runtime for the scraping pipeline, dashboard backend, CLI commands, and service orchestration |
+| **Browser Automation** | SeleniumBase 4.46.5, Selenium 4.40.0 | Chrome automation for Akakce navigation, search interaction, product page loading, and DOM extraction |
+| **Configuration** | PyYAML 6.0.3 | Loads `config/settings.yaml` for URLs, browser options, scraping policy, delays, selectors, and local paths |
+| **Queue & Persistence** | SQLite3 | Stores queue state, legacy scrape snapshots, normalized dimensions, price observations, SQL views, and status history |
+| **Scraping Services** | Python service classes | Separates search resolution, product detail parsing, seller extraction, retry flow, and database writes |
+| **Dashboard Backend** | Flask 3.1.2 | Serves the local dashboard, `/health`, and `/api/dashboard-data` endpoints |
+| **Dashboard Frontend** | HTML, CSS, JavaScript, Apache ECharts | Renders summary metrics, marketplace competitiveness, SKU price spread, and category coverage charts |
+| **CLI Entrypoints** | `pyproject.toml` scripts | Provides `adp`, `adp-scrape`, `adp-seed-targets`, `adp-create-profile`, and `adp-dashboard` commands |
+| **Testing** | Pytest, unittest, pytest-cov | Covers queue handling, scraping services, database behavior, dashboard analytics, routes, and browser smoke tests |
+| **Code Quality** | Ruff, Pyrefly, GitHub Actions | Runs linting, type analysis, tests, and coverage checks in local development and CI |
 
 </details>
 
-## Quantitative Data Analysis & Market Intelligence Report
+## Table of Contents
 
-This report provides a synthesized executive overview of the extracted E-commerce metrics. By applying rigorous data science methodologies—including Interquartile Range (IQR) noise filtration and Pearson correlation scaling—the pipeline transforms raw, high-frequency pricing signals into actionable competitive intelligence. The subsequent analytical visualizations map the complete ecosystem, ranging from foundational market share distribution to complex temporal pricing elasticity.
+- [Database Design & SQL Implementation](#database-design--sql-implementation)
+- [Executive Conclusion & Business Impact](#executive-conclusion--business-impact)
+- [Dependencies](#dependencies)
+- [Quickstart](#quickstart)
+- [Configuration](#configuration)
+- [Limitations & Disclaimers](#limitations--disclaimers)
+- [License](#license)
 
-<table width="100%">
-  <tr align="center">
-    <td>
-      <img src="./reports/charts/marketplace_market_share.png" width="100%" alt="Marketplace Market Share">
-    </td>
-  </tr>
-</table>
+## Database Design & SQL Implementation
 
-> **Analyst Insight:** This proportional volume evaluation isolates the core dominance hierarchies within the ecosystem. The segmentation reveals exact monopolistic/oligopolistic structures. A highly saturated dominant node indicates strong buyer-trust dependency, meaning our pricing algorithms must primarily index that vendor to establish an accurate benchmark. Conversely, if the pie is hyper-fragmented, the market is competitive, and minor price deviations strongly influence consumer elasticity.
+The application uses SQLite as both the scraping queue store and the local pricing warehouse. The schema keeps the original append-only `products` table for backward-compatible dashboard reads, while also maintaining a normalized relational model for SQL reporting, joins, aggregate queries, and auditability.
 
-<table width="100%">
-  <tr align="center">
-    <td>
-      <img src="./reports/charts/marketplace_entry_exit.png" width="100%" alt="Marketplace Entry & Exit">
-    </td>
-  </tr>
-</table>
+| Table / View | Purpose | Key SQL Concepts |
+|:---|:---|:---|
+| `target_products` | Queue of product codes waiting to be scraped | Primary key, unique constraint, queue status updates |
+| `target_status_history` | Audit trail for target status transitions | Foreign key, trigger-populated history |
+| `products` | Append-only scraped offer snapshots used by the dashboard | Primary key, insert statements, historical rows |
+| `product_catalog` | Product dimension table keyed by product code | Primary key, unique constraint, upsert behavior |
+| `marketplaces` | Marketplace/seller dimension table | Primary key, unique marketplace names |
+| `price_observations` | Normalized fact table for seller-level price observations | Foreign keys to products, product catalog, and marketplaces |
+| `v_product_offer_history` | Joined product, marketplace, and price history | SQL view, joins |
+| `v_marketplace_price_summary` | Marketplace-level listing and price summary | SQL view, `GROUP BY`, `COUNT`, `MIN`, `AVG`, `MAX` |
+| `v_product_price_spread` | Product-level marketplace price spread | SQL view, aggregate functions |
 
-> **Analyst Insight:** Tracking listing volumes over temporal axes identifies stock bottlenecks and marketplace entry barriers. Sharp cliffs (exits) often correlate with massive inventory liquidations, supply chain disruptions, or the discontinuation of an explicit SKU. Gradual ascending entry curves represent aggressive distributor restocking ahead of macroeconomic events (e.g. Black Friday).
+Core relationships:
 
-<table width="100%">
-  <tr align="center">
-    <td>
-      <img src="./reports/charts/marketplace_aggressiveness_score.png" width="100%" alt="Marketplace Aggressiveness Score">
-    </td>
-  </tr>
-</table>
+- `price_observations.product_id` references `product_catalog.id`.
+- `price_observations.marketplace_id` references `marketplaces.id`.
+- `price_observations.legacy_product_id` references `products.id`.
+- `target_status_history.target_product_id` references `target_products.id`.
 
-> **Analyst Insight:** The Aggressiveness Score mathematically measures how frequently a specific retailer artificially undercuts the median market baseline. Platforms sporting high aggressiveness scores inherently crash profit margins. They engage in lethal algorithmic "race to the bottom" price wars. This indicator serves as an immediate *Do-Not-Compete* warning for third-party sellers lacking deep logistical margins.
-
-<table width="100%">
-  <tr align="center">
-    <td>
-      <img src="./reports/charts/marketplace_pricing_tier.png" width="100%" alt="Marketplace Pricing Tier">
-    </td>
-  </tr>
-</table>
-
-> **Analyst Insight:** Sellers do not uniformly engage all buyers. By bucketing retailers into Premium vs. Budget tiers, we expose systemic branding strategies. A retailer consistently floating in the upper quartile (Premium) utilizes reliability, shipping speed, and warranty-assurance to completely mask inflated prices away from raw numerical cost.
-
-<table width="100%">
-  <tr align="center">
-    <td>
-      <img src="./reports/charts/price_volatility_by_category.png" width="100%" alt="Price Volatility by Category">
-    </td>
-  </tr>
-</table>
-
-> **Analyst Insight:** By employing Coefficient of Variation (Cv)—a scaleless standardized dispersion measurement—we isolate which electronic subsets present extreme financial risks. Categories pushing steep graphical variations (often GPUs or enthusiast Keyboards) suffer from fragile supply-chains. High volatility implies high trading risk and low temporal price trust.
-
-<table width="100%">
-  <tr align="center">
-    <td>
-      <img src="./reports/charts/segment_price_movement.png" width="100%" alt="Segment Price Movement">
-    </td>
-  </tr>
-</table>
-
-> **Analyst Insight:** This analysis decouples inflation metrics based on price brackets. It reveals whether localized inflation is striking the 'Budget' electronics sector identically to the 'Flagship' sector. Frequently, external macroeconomic shocks (e.g., silicon shortages) elevate the floor (budget models) disproportionately faster than the ceiling.
-
-<table width="100%">
-  <tr align="center">
-    <td>
-      <img src="./reports/charts/product_lifecycle.png" width="100%" alt="Product Lifecycle">
-    </td>
-  </tr>
-</table>
-
-> **Analyst Insight:** Mapping the standard maturity decay path of a product. In the "Early Adopter" phase, algorithmic sellers force premium markup thresholds to capture impulsive consumers. As the ecosystem inevitably shifts to "Maturity", a harsh geometric decay follows. For inventory planners, this curve predicts the precise timeline before hardware becomes obsolete and margin-negative.
-
-<table width="100%">
-  <tr align="center">
-    <td>
-      <img src="./reports/charts/price_convergence.png" width="100%" alt="Price Convergence">
-    </td>
-  </tr>
-</table>
-
-> **Analyst Insight:** This visualization tracks standard deviation collapsing over time. Initially chaotic marketplace prices violently regress closer to the mean as product availability scales and secondary sellers abandon the platform. The "Convergence Zone" mathematically calculates when a hardware asset has reached its true baseline structural value.
-
-<table width="100%">
-  <tr align="center">
-    <td>
-      <img src="./reports/charts/outlier_detection_boxplot.png" width="100%" alt="Outlier Detection Boxplot">
-    </td>
-  </tr>
-</table>
-
-> **Analyst Insight:** Raw, unfiltered data is toxic to predictive ML models. Utilizing Tukey’s Fences (Interquartile Range × 1.5), this scatter-boxplot autonomously strips anomalous listings. The detached data points you see are purely algorithmic scalper listings, fake stock-placeholders, or critical vendor typos. Bypassing these guarantees statistical purity.
-
-<table width="100%">
-  <tr align="center">
-    <td>
-      <img src="./reports/charts/correlation_heatmap.png" width="100%" alt="Correlation Heatmap">
-    </td>
-  </tr>
-</table>
-
-> **Analyst Insight:** The finale of the descriptive pipeline—a rigorous Pearson Correlation matrix computing unobservable mathematical linkages. Revealing direct relationships mapping variables like `Rating Counts` against `Discount Probabilities`. High coefficients visually confirm previously unproven business assumptions: i.e., "Do retailers with higher overall listing volume intrinsically offer the steepest discounts?"
+The scraping flow writes each extracted offer into `products` and mirrors the same row into the normalized schema inside the same database transaction. This keeps the existing dashboard stable while enabling SQL-focused demonstrations with joins, aggregate views, foreign keys, and trigger-backed queue history.
 
 ## Executive Conclusion & Business Impact
 
-This data engineering pipeline mathematically validates core e-commerce intuitions by transforming chaotic, highly fragmented pricing data into structured, actionable intelligence. By deploying advanced statistical noise-filtration techniques—such as Interquartile Range (IQR) boundary enforcement and Standard-Deviation regression models—we isolate standard market fluctuations from artificial algorithmic manipulation. The overarching findings prove that maintaining absolute visibility over seller fluidity, listing history, and aggregated product reviews is non-negotiable for establishing a secure and profitable marketplace position. Our explicit qualitative discoveries include:
+This project turns marketplace product pages into a structured local dataset that can be used to monitor competitive pricing, seller availability, and category-level listing coverage. Instead of relying on manual checks or one-off browser searches, the pipeline creates a repeatable workflow: seed target product codes, process them through a controlled scraping queue, persist seller-level price snapshots, and review the results through an interactive dashboard.
 
-- **Oligopolistic Dominance:** The ecosystem typically consolidates around a few top-tier marketplace nodes. These dominant vendors unilaterally dictate overall consumer price elasticity, meaning baseline pricing algorithms must primarily index them to remain competitive.
-- **Budget Tier Volatility:** Entry-level and mid-range hardware subsets suffer from disproportionate and extreme price fluctuations. They are highly sensitive to localized supply chain bottlenecks and external macroeconomic shocks.
-- **Premium Brand Halo:** High-end electronics uniquely bypass standard inflation elasticity. Sellers consistently mask aggressive pricing markups behind "Brand Trust", superior logistics, and implicit reliability guarantees.
-- **Algorithmic Price Wars:** Continuously tracking competitor "Aggressiveness Scores" serves as an automated mathematical firewall. This metrics stack immediately identifies highly-contested, low-margin sectors, inherently preventing 3rd-party sellers from crashing margins in a guaranteed-loss "race to the bottom".
+From a business perspective, the main value is operational visibility. The dashboard helps identify which marketplaces are consistently price-competitive, which SKUs have the widest seller price gaps, and where category coverage is concentrated or missing. From an engineering perspective, the queue model, retry handling, configuration-driven selectors, and selector usage reports make the system easier to maintain when marketplace pages change.
+
+- **Competitive Price Visibility:** Seller-level price rows make it possible to compare marketplace offers for the same SKU and identify the lowest-price sellers at a point in time.
+- **SKU Price Dispersion:** The dashboard highlights products with the widest gap between minimum, median, and maximum marketplace prices, helping surface SKUs that require closer commercial review.
+- **Marketplace Coverage:** Category and marketplace heatmaps show where listing density is strong or weak, making coverage gaps easier to spot.
+- **Reliable Batch Processing:** Target products are processed through a SQLite-backed queue with retry and failure states, reducing the risk of losing progress during scraper or browser errors.
+- **Maintainable Scraping Operations:** Centralized selectors, configurable delays, and selector usage reports help diagnose DOM changes without scattering scraping assumptions across the codebase.
 
 ## Dependencies
 
-To ensure reproducibility and isolate dependencies, it is recommended to use a virtual environment.
+To ensure reproducibility and isolate project dependencies, use a virtual environment before installing the package. The project dependencies are declared in `pyproject.toml`, which is the source of truth for both runtime and development installs.
 
-### Step 1 — Create Virtual Environment:
+### Step 1 - Create Virtual Environment:
 
 ```bash
 python -m venv .venv
 ```
 
-### Step 2 — Activate Virtual Environment:
+### Step 2 - Activate Virtual Environment:
 
 ```bash
 # Linux/macOS
@@ -218,57 +148,138 @@ source .venv/bin/activate
 .venv\Scripts\activate
 ```
 
-### Step 3 — Install Packages:
+### Step 3 - Upgrade pip:
 
 ```bash
-pip install -r requirements.txt
+python -m pip install --upgrade pip
 ```
 
-*Core Dependencies: `seleniumbase`, `pandas`, `matplotlib`, `seaborn`, `pyyaml`, `scikit-learn`, `scipy`, `openpyxl`.*
+### Step 4 - Install Project Dependencies:
+
+Install only the runtime dependencies:
+
+```bash
+python -m pip install -e .
+```
+
+Install the development dependencies for testing, linting, coverage, and type analysis:
+
+```bash
+python -m pip install -e ".[dev]"
+```
+
+*Runtime dependencies: `seleniumbase`, `selenium`, `PyYAML`, `Flask`.*
+
+*Development dependencies: `pytest`, `pytest-cov`, `ruff`, `pyrefly`.*
 
 ## Quickstart
 
+### Prerequisites
+
+* **Python:** Python 3.11 or later available on your `PATH`.
+* **Google Chrome:** A recent stable version of Google Chrome is required for SeleniumBase browser automation.
+
 ### 1. Web Extraction
 
-Initiate the headless automated browser sequence. This module parses the targeting parameters from `product_codes.txt` and populates the localized SQLite data warehouse (`database/scraper.db`) with normalized pricing indices.
+The web extraction workflow prepares a reusable Chrome profile, loads product
+codes from `product_codes.txt`, and executes the scraping pipeline. Validated
+product details and seller-level price snapshots are persisted into
+`database/scraper.db`.
+
+#### Step 1 - Create Browser Profile:
 
 ```bash
-# Optional automated Windows batch launcher
-start.bat
+python -m src.tasks.create_profile
+```
 
-# Standard explicit python module execution
+#### Step 2 - Seed Product Targets:
+
+```bash
+python -m src.tasks.seed_targets --file product_codes.txt
+```
+
+#### Step 3 - Run Scraping Pipeline:
+
+```bash
 python -m src.main
 ```
 
-### 2. Statistical Analytics Engine
+### 2. Local Dashboard
 
-After accumulating adequate pricing records, launch the computational analysis suite to reproduce the high-resolution quantitative visualizations found in this report.
+After product snapshots are available, start the local dashboard to inspect
+summary metrics, marketplace competitiveness, SKU price dispersion, and
+category coverage charts.
 
 ```bash
-python -m src.analysis.main
+python -m src.web.app
+```
+
+The dashboard runs at:
+
+```text
+http://127.0.0.1:5000
+```
+
+### 3. Quality Checks
+
+Run the unit test suite before changing scraper behavior, persistence logic, or
+dashboard calculations.
+
+```bash
+python -m pytest
 ```
 
 ## Configuration
 
-All runtime behavior is governed by the centralized configuration manifest at `config/settings.yaml`. Architected as a single source of truth, this YAML file externalizes the entire extraction heuristic stack—including target URLs, browser fingerprint profiles, DOM selector mappings, and randomized human-emulation delay intervals—eliminating any need for hardcoded parameters scattered across the codebase. This design ensures that adapting the pipeline to structural changes in the target marketplace (e.g., CSS selector deprecations, layout redesigns, or anti-bot threshold adjustments) requires zero code modifications; only declarative YAML edits.
+Runtime behavior is centralized in [`config/settings.yaml`](./config/settings.yaml). The scraper reads this file through the `Config` service, so target URLs, browser settings, queue behavior, timing delays, DOM selectors, database location, and log output can be adjusted without changing the service code.
+
+The most important sections are:
 
 | Section | Key Parameters | Description |
 |:---|:---|:---|
-| `app` | `name`, `version`, `env` | Application metadata and environment flag |
-| `urls` | `base`, `search` | Target marketplace and fallback search engine base URLs |
-| `paths` | `database`, `logs_dir` | File system paths for SQLite persistence and logging sinks |
-| `browser` | `headless`, `window_size`, `user_agent` | WebDriver profile configuration and stealth parameters |
-| `scraping` | `retries`, `search_engine_fallback` | Extraction resilience toggles and fallback strategy flags |
-| `delays` | `init`, `typing`, `post_search` | Randomized human-emulation timing intervals (anti-detection) |
-| `selectors` | `search_*`, `product.*`, `card.*` | CSS/XPath DOM locators for marketplace HTML structure parsing |
+| `app` | `name`, `version`, `env` | Application metadata used during startup logging and environment identification |
+| `urls` | `base`, `search` | Akakce base URL and Google fallback search URL |
+| `paths` | `database`, `logs_dir` | Local SQLite database path and log directory |
+| `observability.selector_usage` | `enabled`, `output_dir`, `report_prefix` | Selector usage report settings written after scraper execution |
+| `browser` | `headless`, `start_maximized`, `page_load_timeout`, `implicit_wait`, `user_agent`, `user_data_dir`, `profile_name` | SeleniumBase Chrome runtime and persistent profile settings |
+| `scraping` | `retries`, `search_engine_fallback`, `google_query_format`, `html_source_count_threshold`, `search_input_validation_attempts`, `detail_delay_probability`, `no_result_terms` | Retry limits, fallback behavior, search validation, and no-result detection rules |
+| `delays` | `typing`, `pre_enter`, `post_search`, `page_switch`, `google_switch`, `base_navigation`, `post_detail` | Randomized wait ranges used to pace browser interactions and page transitions |
+| `selectors.search_*` | `search_input`, `search_result_item`, `search_result_title`, `search_no_result` | Akakce search page selectors |
+| `selectors.product.*` | `title`, `category_crumb`, `price`, `sellers_list`, `sellers_list_item`, `sellers_alt_item`, `seller_price`, `seller_name_wrapper` | Product detail and seller-list selectors |
+| `selectors.google.*` | `result_link` | Google fallback result link selector |
+
+When Akakce changes its page structure, update the relevant selector values in `settings.yaml` first. After the next scraping execution, inspect the generated selector usage report under the configured log directory to see which selectors were queried, matched, missed, or left unused.
 
 ## Limitations & Disclaimers
 
-- **Educational Purpose:** This project is built strictly for academic research and data engineering portfolio demonstration. It is not intended for commercial exploitation, competitive intelligence warfare, or any activity that violates marketplace Terms of Service.
-- **Rate Limiting & Anti-Bot Detection:** Automated web extraction inherently risks triggering anti-bot defense mechanisms (CAPTCHAs, IP throttling, session invalidation). The built-in randomized delay heuristics mitigate but do not guarantee immunity against detection systems.
-- **Data Accuracy:** Extracted pricing data reflects point-in-time snapshots of live marketplace DOM states. Prices, seller availability, and product listings are inherently volatile and may change between extraction cycles.
-- **Third-Party Dependency:** The extraction layer is tightly coupled to the current HTML structure of the target marketplace. DOM layout changes, CSS selector deprecations, or structural redesigns will require corresponding updates to `config/settings.yaml` locators.
-- **No Guarantee of Completeness:** Not all sellers or listings may be captured during any single extraction run due to dynamic page rendering, lazy-loading mechanisms, or regional content variations.
+> **Important:** This section defines the operational, data-quality, and compliance boundaries of the marketplace metrics produced by this project.
+
+### Responsible Automation and Access Boundaries
+
+- **Educational and portfolio scope:** This project is intended for academic research, data engineering practice, and portfolio demonstration. It should be used responsibly and in accordance with applicable website policies, Terms of Service, and local regulations.
+- **No access-control bypassing:** Browser automation, persistent profiles, randomized delays, and CAPTCHA-related browser hooks must not be treated as mechanisms for bypassing authentication, rate limits, anti-bot systems, or other access restrictions.
+- **Browser session sensitivity:** The persistent Chrome profile configured through `.browser_profile` may contain cookies, preferences, or session state. Treat it as local runtime data and do not commit, publish, or share it.
+- **Execution reliability:** Automated browser workflows can encounter CAPTCHAs, temporary blocks, rate limits, expired sessions, layout experiments, slow rendering, or network instability. Retry handling and randomized delays improve resilience, but they do not guarantee uninterrupted extraction.
+
+### Data Scope and Snapshot Interpretation
+
+- **Point-in-time observations:** Prices, seller names, product availability, and category signals are captured as snapshots from the moment of scraping. They should not be interpreted as live market truth after the run has completed.
+- **Seed-list coverage:** The collected dataset is only as broad as `product_codes.txt` and the successfully processed queue records. Category-level or marketplace-level conclusions should not be generalized beyond the active target list without expanding and validating the seed universe.
+- **Local database context:** `database/scraper.db` is a local SQLite database used by both the scraper and dashboard. Treat its contents as environment-specific runtime data unless you intentionally version a reviewed snapshot.
+- **Incomplete market visibility:** The pipeline stores visible offers that can be extracted from the rendered product page. Listings may still be missed because of dynamic rendering, regional availability, failed retries, hidden seller data, unavailable price signals, or page instability.
+
+### Product Matching and Extraction Limitations
+
+- **SKU validation dependency:** The scraper validates product detail pages against the requested product code before extracting seller rows. Close variants or unrelated fallback results can still appear during search, and unverified matches should be reviewed through logs and database output.
+- **Selector and layout dependency:** Extraction depends on Akakce's current page structure and the selectors configured in `config/settings.yaml`. Layout changes, class-name changes, lazy loading, or selector drift may require configuration updates or extraction logic changes.
+- **Seller identity normalization:** Seller names are captured from visible page text or image metadata when available. Marketplace naming differences, missing labels, or layout variants can affect seller consistency.
+- **Price signal quality:** Wide spreads, unusually high prices, zero values, or missing prices are review signals, not automatic proof of scraper failure. They may reflect low stock, reseller behavior, bundles, stale listings, variant ambiguity, or real marketplace fragmentation.
+
+### Intended Use
+
+- **Decision-support use case:** The project supports pricing intelligence exploration, data-quality review, and marketplace monitoring workflows. It should not be used for automated commercial decision-making without human validation.
+- **Manual review requirement:** High-impact conclusions should be checked against fresh scraper runs, source product pages, application logs, selector usage reports, and the dashboard output.
+- **Configuration responsibility:** Users who change target products, selectors, browser settings, persistence rules, or dashboard logic should rerun the test suite and inspect generated runtime outputs before relying on the resulting metrics.
 
 ## License
 
